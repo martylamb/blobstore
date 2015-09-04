@@ -41,23 +41,23 @@ import java.util.stream.Stream;
  * A simple API for providing a content-addressable, local disk-backed data
  * store.
  * 
- * A BlobStore arranges its data similar to a git repository but does not
+ * <p>A BlobStore arranges its data similar to a git repository but does not
  * provide any versioning, transactions, or similar source control-related
- * functionality (but those could be added on top of BlobStore).
+ * functionality (but those could be added on top of BlobStore).</p>
  * 
- * By default, BlobStore uses SHA-1 as its MessageDigest to create content
+ * <p>By default, BlobStore uses SHA-1 as its MessageDigest to create content
  * addresses (called "Refs" in this API).  You can supply alternative
  * MessageDigest names or digests, or even skip the MessageDigest altogether
  * and manually specify Refs for your data (treating the BlobStore much like a
  * HashMap - e.g. to use two parallel BlobStores, one using digests and the
- * other containing metadata with the same Ref as its associated data Blob).
+ * other containing metadata with the same Ref as its associated data Blob).</p>
  * 
- * Blobs are accessed via Refs, which the BlobStore uses internally to locate
- * the backing files.  Blobs provide access to the actual data.
+ * <p>Blobs are accessed via Refs, which the BlobStore uses internally to locate
+ * the backing files.  Blobs provide access to the actual data.</p>
  * 
- * When content is added to a BlobStore, it is first copied into a BlobStore
+ * <p>When content is added to a BlobStore, it is first copied into a BlobStore
  * staging directory, and is then moved to the BlobStore (if necessary) using
- * the ATOMIC_MOVE CopyOption.
+ * the ATOMIC_MOVE CopyOption.</p>
  * 
  * @author <a href="http://martiansoftware.com/contact.html">Marty Lamb</a>
  */

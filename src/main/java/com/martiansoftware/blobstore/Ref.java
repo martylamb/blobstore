@@ -24,9 +24,9 @@ import javax.xml.bind.DatatypeConverter;
  * A reference to a Blob within a BlobStore.  This is essentially the key or
  * index into a given BlobStore for performing operations on a Blob.
  * 
- * In most cases this will be the hash of the Blob being stored, although that
+ * <p>In most cases this will be the hash of the Blob being stored, although that
  * is not a requirement (i.e., if using BlobStore.put() to add files to the
- * BlobStore).
+ * BlobStore).</p>
  * 
  * @author <a href="http://martiansoftware.com/contact.html">Marty Lamb</a>
  */
