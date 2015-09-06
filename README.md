@@ -16,9 +16,19 @@ Here's an example showing the basic operations: :+1:
 BlobStore bs = new BlobStore(Paths.get("/path/to/your/blobstore"));
 System.out.println("Created " + bs);
 
+// add a byte array directly...
 byte[] b = "This is a test".getBytes();
 Blob blob = bs.add(b);
 System.out.println("Added " + blob);
+
+// ...or a file
+File f = new File("/path/to/my/file");
+Blob blob2 = bs.add(f);
+System.out.println("Added " + blob2);
+
+// ...or an InputStream
+Blob blob3 = bs.add(someInputStream);
+System.out.println("Added " + blob3);
 
 Ref ref = blob.ref();
 System.out.println("Ref is " + ref);
@@ -27,6 +37,10 @@ System.out.println("Blob size: " + blob.size());
 
 Blob readback = bs.get(ref);
 System.out.println("Read back " + readback.size() + " bytes");
+
+// read Blob data back into a byte array.  You can just as easily copy it
+// to a file via Blob.copyTo() or obtain an InputStream from the Blob
+// via Blob.inputStream()
 String s = new String(readback.readAllBytes());
 System.out.println("Data read back: " + s);
 
