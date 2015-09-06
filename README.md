@@ -49,3 +49,42 @@ System.out.println("Deleted blob.");
 System.out.println("Original blob data exists: " + blob.exists());
 System.out.println("Readback blob data exists: " + readback.exists());
 ```
+
+## Using with Maven
+
+### Add the repository to your project:
+
+```xml
+<project>
+	...
+	<repositories>
+		...
+		<repository>
+			<id>martiansoftware</id>
+			<url>http://mvn.martiansoftware.com</url>
+		</repository>
+		...
+	</repositories> 
+	...
+</project>
+```
+
+### Add the dependency to your project:
+-----------------------------------
+
+```xml
+<project>
+	...
+	<dependencies>
+		...
+		<dependency>
+			<groupId>com.martiansoftware</groupId>
+			<artifactId>blobstore</artifactId>
+			<version>0.1.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		...
+	</dependencies>
+	...
+</project>
+```
