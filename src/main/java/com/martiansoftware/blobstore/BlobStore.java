@@ -66,7 +66,8 @@ public class BlobStore {
     // TODO: add a gc() method to clean up any partially-staged files of a
     //       certain age?
     // TODO: allow completely arbitrary String-based Refs with base64 encoding?
-    //       (requires allowing arbitrary-length Refs within a BlobStore)
+    //       (might require allowing arbitrary-length Refs within a BlobStore,
+    //       or else encoding Strings to a fixed length)
 
     /** The top level directory of this BlobStore */
     final Path _root;
