@@ -39,7 +39,7 @@ public class Ref {
      * Creates a new Ref using the specified byte array.
      * @param b generally the hash of the blob.  Must be at least two bytes long.
      */
-    Ref(byte[] b) {
+    public Ref(byte[] b) {
         _bytes = Arrays.copyOf(b, b.length);
         checkLength();
     }
@@ -49,7 +49,7 @@ public class Ref {
      * @param s generally a String representation of the blob hash.  Must consist of an even
      * number of hexadecimal characters [0-9a-fA-F] and be at least four characters long.
      */
-    Ref(String s) {
+    public Ref(String s) {
         checkHex(s);
         _bytes = DatatypeConverter.parseHexBinary(s);
         checkLength();
@@ -63,7 +63,7 @@ public class Ref {
      * 
      * @param p the Path on which to base the new Ref
      */
-    Ref(Path p) {
+    public Ref(Path p) {
         StringBuilder sb = new StringBuilder();
         String s = p.getParent().getFileName().toString();
         checkHex(s);
