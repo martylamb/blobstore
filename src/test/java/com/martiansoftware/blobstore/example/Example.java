@@ -49,6 +49,11 @@ public class Example {
             Blob blob3 = bs.add(Files.newInputStream(p));
             System.out.format("Added %s%n", blob3);
 
+            // you can get some stats from the BlobStore - note that we
+            // added the same README file twice above
+            System.out.format("Total blobs: %d%n", bs.blobCount());
+            System.out.format("Total bytes: %d%n", bs.byteCount());
+            
             // of course you can retrieve them as well
             // this returns an Optional<Blob> because the requested Blob might not be found
             Optional<Blob> oBlob4 = bs.get("c7be1ed902fb8dd4d48997c6452f5d7e509fbcdbe2808b16bcf4edce4c07d14e");
