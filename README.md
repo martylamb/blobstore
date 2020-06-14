@@ -2,89 +2,46 @@
 
 ## A simple API for providing a content-addressable, local disk-backed data store.
 
-A `BlobStore` arranges its data similar to a git repository but does not provide any versioning, transactions, or similar source control-related functionality (although those could be added on top of BlobStore).
+A `BlobStore` provides methods for storing and retrieving arbitrary data ("blobs") of any size.  Blobs are accessed via a Blob ID constructed from a MessageDigest of the blob.  The underlying storage mechanism for the blobs is managed by the BlobStore implementation.
 
-By default, `BlobStore` uses SHA-1 as its `MessageDigest` to create content addresses (called "`Ref`s" in this API).  You can supply alternative `MessageDigest` names or digests, or even skip the `MessageDigest` altogether and manually specify `Ref`s for your data (treating the `BlobStore` much like a `HashMap` - e.g. to use two parallel BlobStores, one using digests and the other containing metadata with the same Ref as its associated data Blob).
-
-`Blob`s are accessed via `Ref`s, which the `BlobStore` uses internally to locate the backing files.  `Blob`s provide access to the actual data.
- 
-When content is added to a `BlobStore`, it is first copied into a `BlobStore` staging directory, and is then moved to the `BlobStore` (if necessary) using the ATOMIC_MOVE `CopyOption`.
-
-Here's an example showing the basic operations: :+1:
+Here's an example showing the basic operations:
 
 ```java
-BlobStore bs = new BlobStore(Paths.get("/path/to/your/blobstore"));
-System.out.println("Created " + bs);
+try (BlobStore bs = DigestBlobStore.sha256(Paths.get("~/blobstore-example"))) {
+    // add a byte array directly...
+    byte[] b = "This is a test".getBytes(StandardCharsets.UTF_8);
+    Blob blob = bs.add(b);
+    System.out.format("Added %s%n", blob);
 
-// add a byte array directly...
-byte[] b = "This is a test".getBytes();
-Blob blob = bs.add(b);
-System.out.println("Added " + blob);
+    // ...or a file
+    Path p = Paths.get("README.md");
+    Blob blob2 = bs.add(p);
+    System.out.format("Added %s%n", blob2);
 
-// ...or a file
-File f = new File("/path/to/my/file");
-Blob blob2 = bs.add(f);
-System.out.println("Added " + blob2);
+    // ...or an InputStream
+    Blob blob3 = bs.add(Files.newInputStream(p));
+    System.out.format("Added %s%n", blob3);
 
-// ...or an InputStream
-Blob blob3 = bs.add(someInputStream);
-System.out.println("Added " + blob3);
+    // of course you can retrieve them as well
+    String id = blob.id(); // this is the first Blob we added above
+    Optional<Blob> oBlob4 = bs.get(id); // optional, may not have been found
+    Blob blob4 = oBlob4.get();
+    System.out.format("Retrieved %s%n", blob4);
 
-Ref ref = blob.ref();
-System.out.println("Ref is " + ref);
-System.out.println("Blob exists: " + blob.exists());
-System.out.println("Blob size: " + blob.size());
+    // and read back the data
+    byte[] buf = new byte[(int) blob4.size()];
+    new DataInputStream(blob4.getInputStream()).readFully(buf);
+    System.out.format("Retrieved data is [%s]%n", new String(buf, StandardCharsets.UTF_8));
+}
 
-Blob readback = bs.get(ref);
-System.out.println("Read back " + readback.size() + " bytes");
-
-// read Blob data back into a byte array.  You can just as easily copy it
-// to a file via Blob.copyTo() or obtain an InputStream from the Blob
-// via Blob.inputStream()
-String s = new String(readback.readAllBytes());
-System.out.println("Data read back: " + s);
-
-readback.delete();
-System.out.println("Deleted blob.");
-System.out.println("Original blob data exists: " + blob.exists());
-System.out.println("Readback blob data exists: " + readback.exists());
 ```
 
-## Using with Maven
+And the output:
 
-### Add the repository to your project:
-
-```xml
-<project>
-	...
-	<repositories>
-		...
-		<repository>
-			<id>martiansoftware</id>
-			<url>http://mvn.martiansoftware.com</url>
-		</repository>
-		...
-	</repositories> 
-	...
-</project>
-```
-
-### Add the dependency to your project:
------------------------------------
-
-```xml
-<project>
-	...
-	<dependencies>
-		...
-		<dependency>
-			<groupId>com.martiansoftware</groupId>
-			<artifactId>blobstore</artifactId>
-			<version>0.1.0-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		...
-	</dependencies>
-	...
-</project>
+```console
+Added Blob id=c7be1ed902fb8dd4d48997c6452f5d7e509fbcdbe2808b16bcf4edce4c07d14e size=14
+Added Blob id=03af2fcd80f6d1f910a111f58256ca252b487113e261ea4f9af0e5e7f3f408d3 size=2196
+Added Blob id=03af2fcd80f6d1f910a111f58256ca252b487113e261ea4f9af0e5e7f3f408d3 size=2196
+Retrieved Blob id=c7be1ed902fb8dd4d48997c6452f5d7e509fbcdbe2808b16bcf4edce4c07d14e size=14
+Retrieved data is [This is a test]
 ```
