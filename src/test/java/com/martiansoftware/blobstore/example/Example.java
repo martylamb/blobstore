@@ -50,8 +50,8 @@ public class Example {
             System.out.format("Added %s%n", blob3);
 
             // of course you can retrieve them as well
-            String id = blob.id(); // this is the first Blob we added above
-            Optional<Blob> oBlob4 = bs.get(id); // optional, may not have been found
+            // this returns an Optional<Blob> because the requested Blob might not be found
+            Optional<Blob> oBlob4 = bs.get("c7be1ed902fb8dd4d48997c6452f5d7e509fbcdbe2808b16bcf4edce4c07d14e");
             Blob blob4 = oBlob4.get();
             System.out.format("Retrieved %s%n", blob4);
             
